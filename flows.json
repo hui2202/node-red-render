@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "id": "c2fb3b6a362c0ad5",
+        "type": "tab",
+        "label": "流程 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ddc4619efabb0fc3",
+        "type": "inject",
+        "z": "c2fb3b6a362c0ad5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    }
+]
