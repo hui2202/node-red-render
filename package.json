@@ -3,7 +3,7 @@
     "description": "A Node-RED Project",
     "version": "0.0.1",
     "scripts": {
-        "start": "node-red --settings ./settings.js --userDir ."
+    "start": "./node_modules/.bin/node-red --settings ./settings.js --userDir ."
     },
     "dependencies": {
         "node-red": "4.1.8"
