@@ -2,11 +2,10 @@
     "name": "node-red-render",
     "description": "A Node-RED Project",
     "version": "0.0.1",
-    "dependencies": {},
-    "node-red": {
-        "settings": {
-            "flowFile": "flows.json",
-            "credentialsFile": "flows_cred.json"
-        }
+    "scripts": {
+        "start": "node-red --settings ./settings.js --userDir ."
+    },
+    "dependencies": {
+        "node-red": "4.1.8"
     }
 }
