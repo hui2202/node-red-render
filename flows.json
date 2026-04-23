@@ -1,0 +1,276 @@
+[
+    {
+        "id": "e7147f212e63eb38",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "inject1",
+        "type": "inject",
+        "z": "e7147f212e63eb38",
+        "name": "Start Stream",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "file1"
+            ]
+        ]
+    },
+    {
+        "id": "file1",
+        "type": "file in",
+        "z": "e7147f212e63eb38",
+        "name": "Read CSV File",
+        "filename": "./Metro_Interstate_Traffic_Volume.csv",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "allProps": false,
+        "x": 320,
+        "y": 520,
+        "wires": [
+            [
+                "b44c7550e7913aa3"
+            ]
+        ]
+    },
+    {
+        "id": "csv1",
+        "type": "csv",
+        "z": "e7147f212e63eb38",
+        "name": "CSV → JSON",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "skip": "0",
+        "x": 520,
+        "y": 520,
+        "wires": [
+            [
+                "clean1"
+            ]
+        ]
+    },
+    {
+        "id": "clean1",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Step 1: Data Cleaning",
+        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\nif (!msg.payload.traffic_volume) return null;\n\n// Remove noise (no negative values)\nmsg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 750,
+        "y": 520,
+        "wires": [
+            [
+                "feature1"
+            ]
+        ]
+    },
+    {
+        "id": "feature1",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Step 2: Feature Engineering",
+        "func": "// Convert date\nlet date = new Date(msg.payload.date_time);\n\n// Extract hour\nmsg.payload.hour = date.getHours();\n\n// Create peak hour feature\nmsg.payload.is_peak = (msg.payload.hour >= 7 && msg.payload.hour <= 9) || \n                      (msg.payload.hour >= 16 && msg.payload.hour <= 18);\n\n// Normalize traffic volume\nmsg.payload.traffic_scaled = msg.payload.traffic_volume / 10000;\n\nreturn msg;",
+        "outputs": 1,
+        "x": 1000,
+        "y": 520,
+        "wires": [
+            [
+                "debug1",
+                "save1"
+            ]
+        ]
+    },
+    {
+        "id": "save1",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Format for CSV",
+        "func": "let p = msg.payload;\nmsg.payload = `${p.date_time},${p.traffic_volume},${p.temp},${p.rain_1h},${p.hour},${p.is_peak},${p.traffic_scaled}\\n`;\nreturn msg;",
+        "outputs": 1,
+        "x": 1220,
+        "y": 580,
+        "wires": [
+            [
+                "fileout1"
+            ]
+        ]
+    },
+    {
+        "id": "fileout1",
+        "type": "file",
+        "z": "e7147f212e63eb38",
+        "name": "Save Cleaned Data",
+        "filename": "./cleaned_output.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "utf8",
+        "x": 1450,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "debug1",
+        "type": "debug",
+        "z": "e7147f212e63eb38",
+        "name": "Preview Clean Data",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 1230,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "f52d9c7732c9193e",
+        "type": "inject",
+        "z": "e7147f212e63eb38",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "holiday\ttemp\train_1h\tsnow_1h\tclouds_all\tweather_main\tweather_description\tdate_time\ttraffic_volume None\t288.28\t0\t0\t40\tClouds\tscattered clouds\t10/2/2012 9:00\t5545 None\t289.36\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 10:00\t4516 None\t289.58\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 11:00\t4767 None\t290.13\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 12:00\t5026 None\t291.14\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 13:00\t4918 None\t291.72\t0\t0\t1\tClear\tsky is clear\t10/2/2012 14:00\t5181 None\t293.17\t0\t0\t1\tClear\tsky is clear\t10/2/2012 15:00\t5584 None\t293.86\t0\t0\t1\tClear\tsky is clear\t10/2/2012 16:00\t6015 None\t294.14\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 17:00\t5791 None\t293.1\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 18:00\t4770 None\t290.97\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 19:00\t3539 None\t289.38\t0\t0\t1\tClear\tsky is clear\t10/2/2012 20:00\t2784",
+        "payloadType": "str",
+        "x": 90,
+        "y": 620,
+        "wires": [
+            [
+                "02686498c5de7f39"
+            ]
+        ]
+    },
+    {
+        "id": "02686498c5de7f39",
+        "type": "csv",
+        "z": "e7147f212e63eb38",
+        "name": "",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\r\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 270,
+        "y": 620,
+        "wires": [
+            [
+                "75ec954d474e76da"
+            ]
+        ]
+    },
+    {
+        "id": "75ec954d474e76da",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Data Cleaning",
+        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n\n// Remove invalid data\nif (!msg.payload.traffic_volume) return null;\nmsg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 620,
+        "wires": [
+            [
+                "fbb9b22efea5c26b"
+            ]
+        ]
+    },
+    {
+        "id": "fbb9b22efea5c26b",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Feature Engineering",
+        "func": "let date = new Date(msg.payload.date_time);\n\n// Extract hour\nmsg.payload.hour = date.getHours();\n\n// Peak hour\nmsg.payload.is_peak = (msg.payload.hour >= 7 && msg.payload.hour <= 9) ||\n    (msg.payload.hour >= 16 && msg.payload.hour <= 18);\n\n// Normalize\nmsg.payload.traffic_scaled = msg.payload.traffic_volume / 10000;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 620,
+        "wires": [
+            [
+                "139c1ed6c16503ed"
+            ]
+        ]
+    },
+    {
+        "id": "139c1ed6c16503ed",
+        "type": "debug",
+        "z": "e7147f212e63eb38",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "b44c7550e7913aa3",
+        "type": "delay",
+        "z": "e7147f212e63eb38",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "200",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 430,
+        "y": 440,
+        "wires": [
+            [
+                "csv1"
+            ]
+        ]
+    }
+]
