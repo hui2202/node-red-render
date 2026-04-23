@@ -1,8 +1,0 @@
-{
-    "projects": {
-        "node-red-render": {
-            "credentialSecret": false
-        }
-    },
-    "activeProject": "node-red-render"
-}
