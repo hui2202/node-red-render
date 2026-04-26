@@ -18,8 +18,8 @@
         "once": false,
         "onceDelay": "1",
         "topic": "",
-        "x": 120,
-        "y": 520,
+        "x": 110,
+        "y": 220,
         "wires": [
             [
                 "file1"
@@ -33,12 +33,12 @@
         "name": "Read CSV File",
         "filename": "./Metro_Interstate_Traffic_Volume.csv",
         "filenameType": "str",
-        "format": "utf8",
+        "format": "lines",
         "chunk": false,
         "sendError": false,
         "allProps": false,
-        "x": 320,
-        "y": 520,
+        "x": 280,
+        "y": 220,
         "wires": [
             [
                 "b44c7550e7913aa3"
@@ -55,9 +55,13 @@
         "hdrout": "none",
         "multi": "one",
         "ret": "\\n",
+        "temp": "",
         "skip": "0",
-        "x": 520,
-        "y": 520,
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": false,
+        "x": 620,
+        "y": 220,
         "wires": [
             [
                 "clean1"
@@ -69,12 +73,18 @@
         "type": "function",
         "z": "e7147f212e63eb38",
         "name": "Step 1: Data Cleaning",
-        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\nif (!msg.payload.traffic_volume) return null;\n\n// Remove noise (no negative values)\nmsg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\nreturn msg;",
+        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n//if (!msg.payload.traffic_volume) return null;\n\n// 临时将这行注释掉（在前面加 //）\n// if (!msg.payload.traffic_volume) return null; \n// 暂时注释掉拦截逻辑，改用日志输出\nif (!msg.payload.traffic_volume && msg.payload.traffic_volume !== 0) {\n    node.warn(\"数据被拦截：未找到 traffic_volume。当前 payload 内容: \" + JSON.stringify(msg.payload));\n        return null; // 如果确定没数据，依然需要返回 null 防止下游报错\n        }\n\n        // 正常逻辑\n        if (!msg.payload.temp) msg.payload.temp = 20;\n        if (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n        msg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\n        return msg;",
         "outputs": 1,
-        "x": 750,
-        "y": 520,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 360,
         "wires": [
             [
+                "7e16dbcd969ef943",
                 "feature1"
             ]
         ]
@@ -91,12 +101,13 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1000,
-        "y": 520,
+        "x": 440,
+        "y": 440,
         "wires": [
             [
                 "debug1",
-                "save1"
+                "save1",
+                "75d717f69cc21bee"
             ]
         ]
     },
@@ -112,8 +123,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1220,
-        "y": 580,
+        "x": 760,
+        "y": 440,
         "wires": [
             [
                 "fileout1"
@@ -131,8 +142,8 @@
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "utf8",
-        "x": 1450,
-        "y": 580,
+        "x": 950,
+        "y": 440,
         "wires": [
             []
         ]
@@ -144,15 +155,21 @@
         "name": "Preview Clean Data",
         "active": false,
         "tosidebar": true,
+        "console": false,
+        "tostatus": false,
         "complete": "payload",
-        "x": 1230,
-        "y": 480,
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 360,
         "wires": []
     },
     {
         "id": "f52d9c7732c9193e",
         "type": "inject",
         "z": "e7147f212e63eb38",
+        "d": true,
         "name": "",
         "props": [
             {
@@ -171,7 +188,7 @@
         "payload": "holiday\ttemp\train_1h\tsnow_1h\tclouds_all\tweather_main\tweather_description\tdate_time\ttraffic_volume None\t288.28\t0\t0\t40\tClouds\tscattered clouds\t10/2/2012 9:00\t5545 None\t289.36\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 10:00\t4516 None\t289.58\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 11:00\t4767 None\t290.13\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 12:00\t5026 None\t291.14\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 13:00\t4918 None\t291.72\t0\t0\t1\tClear\tsky is clear\t10/2/2012 14:00\t5181 None\t293.17\t0\t0\t1\tClear\tsky is clear\t10/2/2012 15:00\t5584 None\t293.86\t0\t0\t1\tClear\tsky is clear\t10/2/2012 16:00\t6015 None\t294.14\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 17:00\t5791 None\t293.1\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 18:00\t4770 None\t290.97\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 19:00\t3539 None\t289.38\t0\t0\t1\tClear\tsky is clear\t10/2/2012 20:00\t2784",
         "payloadType": "str",
         "x": 90,
-        "y": 620,
+        "y": 800,
         "wires": [
             [
                 "02686498c5de7f39"
@@ -195,7 +212,7 @@
         "include_empty_strings": "",
         "include_null_values": "",
         "x": 270,
-        "y": 620,
+        "y": 800,
         "wires": [
             [
                 "75ec954d474e76da"
@@ -215,7 +232,7 @@
         "finalize": "",
         "libs": [],
         "x": 460,
-        "y": 620,
+        "y": 800,
         "wires": [
             [
                 "fbb9b22efea5c26b"
@@ -235,11 +252,9 @@
         "finalize": "",
         "libs": [],
         "x": 700,
-        "y": 620,
+        "y": 800,
         "wires": [
-            [
-                "75d717f69cc21bee"
-            ]
+            []
         ]
     },
     {
@@ -250,7 +265,7 @@
         "pauseType": "rate",
         "timeout": "5",
         "timeoutUnits": "seconds",
-        "rate": "200",
+        "rate": "1",
         "nbRateUnits": "1",
         "rateUnits": "second",
         "randomFirst": "1",
@@ -259,8 +274,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 430,
-        "y": 440,
+        "x": 450,
+        "y": 220,
         "wires": [
             [
                 "csv1"
@@ -272,15 +287,15 @@
         "type": "function",
         "z": "e7147f212e63eb38",
         "name": "Prepare API Input",
-        "func": "// extract API\nmsg.payload = {\n    \"temp\": msg.payload.temp,\n    \"rain_1h\": msg.payload.rain_1h,\n    \"hour\": msg.payload.hour,\n    \"is_peak\": msg.payload.is_peak,\n    \"day_of_week\": msg.payload.day_of_week\n};\nreturn msg;",
+        "func": "// extract API\nmsg.payload = {\n    \"temp\": msg.payload.temp,\n    \"rain_1h\": msg.payload.rain_1h,\n    \"hour\": msg.payload.hour,\n    \"is_peak\": msg.payload.is_peak,\n    \"day_of_week\": msg.payload.day_of_week\n};\n\nmsg.method = \"POST\";\nmsg.url = \"http://127.0.0.1:5000/predict\";\nmsg.timeout = 5000; // 设置 5 秒超时\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 930,
-        "y": 620,
+        "x": 770,
+        "y": 500,
         "wires": [
             [
                 "80111e5ef10384f2"
@@ -295,7 +310,7 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "http://127.0.0.1:5000/predict",
+        "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -303,12 +318,11 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 1090,
-        "y": 660,
+        "x": 950,
+        "y": 500,
         "wires": [
             [
-                "84e9c50575713fac",
-                "5a767da3ce6184a1"
+                "84e9c50575713fac"
             ]
         ]
     },
@@ -320,10 +334,10 @@
         "rules": [
             {
                 "t": "set",
-                "p": "traffic_prediction",
+                "p": "payload.traffic_prediction",
                 "pt": "msg",
-                "to": "msg.payload.traffic_level",
-                "tot": "str"
+                "to": "payload.traffic_level",
+                "tot": "msg"
             }
         ],
         "action": "",
@@ -331,27 +345,76 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1290,
-        "y": 660,
+        "x": 1110,
+        "y": 500,
         "wires": [
-            []
+            [
+                "f33bc7b5a63dddd6"
+            ]
         ]
     },
     {
-        "id": "5a767da3ce6184a1",
+        "id": "ab942c6365a22f19",
+        "type": "catch",
+        "z": "e7147f212e63eb38",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 380,
+        "y": 560,
+        "wires": [
+            [
+                "524d31855815b8a6"
+            ]
+        ]
+    },
+    {
+        "id": "524d31855815b8a6",
         "type": "debug",
         "z": "e7147f212e63eb38",
-        "name": "debug 1",
+        "name": "debug 2",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1280,
-        "y": 720,
+        "x": 560,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "7e16dbcd969ef943",
+        "type": "debug",
+        "z": "e7147f212e63eb38",
+        "name": "Check data cleaning process is work",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "f33bc7b5a63dddd6",
+        "type": "debug",
+        "z": "e7147f212e63eb38",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 500,
         "wires": []
     }
 ]

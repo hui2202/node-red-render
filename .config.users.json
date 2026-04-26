@@ -6,15 +6,37 @@
                 "view-store-position": false,
                 "view-show-grid": true,
                 "view-snap-grid": true,
-                "view-grid-size": 20,
+                "view-grid-size": "20",
                 "view-node-status": true,
                 "view-node-info-icon": true,
                 "view-node-show-label": true,
-                "view-show-tips": true,
+                "view-show-tips": false,
                 "view-show-welcome-tours": true
             },
             "tours": {
                 "welcome": "4.1.8-git"
+            },
+            "sidebar": {
+                "order": [
+                    "info",
+                    "help",
+                    "version-control",
+                    "debug",
+                    "config",
+                    "context"
+                ]
+            }
+        },
+        "debug": {
+            "filter": "filterAll"
+        },
+        "git": {
+            "user": {
+                "name": "",
+                "email": ""
+            },
+            "workflow": {
+                "mode": "auto"
             }
         }
     }
