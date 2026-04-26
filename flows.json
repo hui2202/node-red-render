@@ -238,25 +238,9 @@
         "y": 620,
         "wires": [
             [
-                "139c1ed6c16503ed"
+                "75d717f69cc21bee"
             ]
         ]
-    },
-    {
-        "id": "139c1ed6c16503ed",
-        "type": "debug",
-        "z": "e7147f212e63eb38",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 920,
-        "y": 620,
-        "wires": []
     },
     {
         "id": "b44c7550e7913aa3",
@@ -282,5 +266,92 @@
                 "csv1"
             ]
         ]
+    },
+    {
+        "id": "75d717f69cc21bee",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Prepare API Input",
+        "func": "// extract API\nmsg.payload = {\n    \"temp\": msg.payload.temp,\n    \"rain_1h\": msg.payload.rain_1h,\n    \"hour\": msg.payload.hour,\n    \"is_peak\": msg.payload.is_peak,\n    \"day_of_week\": msg.payload.day_of_week\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 620,
+        "wires": [
+            [
+                "80111e5ef10384f2"
+            ]
+        ]
+    },
+    {
+        "id": "80111e5ef10384f2",
+        "type": "http request",
+        "z": "e7147f212e63eb38",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:5000/predict",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1090,
+        "y": 660,
+        "wires": [
+            [
+                "84e9c50575713fac",
+                "5a767da3ce6184a1"
+            ]
+        ]
+    },
+    {
+        "id": "84e9c50575713fac",
+        "type": "change",
+        "z": "e7147f212e63eb38",
+        "name": "Set Results",
+        "rules": [
+            {
+                "t": "set",
+                "p": "traffic_prediction",
+                "pt": "msg",
+                "to": "msg.payload.traffic_level",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1290,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a767da3ce6184a1",
+        "type": "debug",
+        "z": "e7147f212e63eb38",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 720,
+        "wires": []
     }
 ]
