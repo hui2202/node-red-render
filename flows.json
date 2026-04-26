@@ -73,7 +73,7 @@
         "type": "function",
         "z": "e7147f212e63eb38",
         "name": "Step 1: Data Cleaning",
-        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n//if (!msg.payload.traffic_volume) return null;\n\n// 临时将这行注释掉（在前面加 //）\n// if (!msg.payload.traffic_volume) return null; \n// 暂时注释掉拦截逻辑，改用日志输出\nif (!msg.payload.traffic_volume && msg.payload.traffic_volume !== 0) {\n    node.warn(\"数据被拦截：未找到 traffic_volume。当前 payload 内容: \" + JSON.stringify(msg.payload));\n        return null; // 如果确定没数据，依然需要返回 null 防止下游报错\n        }\n\n        // 正常逻辑\n        if (!msg.payload.temp) msg.payload.temp = 20;\n        if (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n        msg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\n        return msg;",
+        "func": "// --- 1. Data Cleaning (Handling missing values) ---\n// Set default values if temp or rain_1h are missing\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n\n// Validate that traffic_volume exists; stop flow if invalid\nif (!msg.payload.traffic_volume && msg.payload.traffic_volume !== 0) {\n    node.warn(\"Data blocked: traffic_volume missing. Payload: \" + JSON.stringify(msg.payload));\n    return null;\n}\n\n// Ensure traffic_volume is a non-negative number\nmsg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\n\n// --- 2. Feature Engineering (Extracting time and normalizing data) ---\n// Parse the date_time string to extract specific features\nlet date = new Date(msg.payload.date_time);\n\n// Extract hour from date\nmsg.payload.hour = date.getHours();\n\n// Define peak hours (7-9 AM, 4-6 PM)\nmsg.payload.is_peak = (msg.payload.hour >= 7 && msg.payload.hour <= 9) ||\n    (msg.payload.hour >= 16 && msg.payload.hour <= 18) ? 1 : 0;\n\n// Scale traffic volume for model input consistency\nmsg.payload.traffic_scaled = msg.payload.traffic_volume / 10000;\n\n\n// --- 3. Label Generation (Categorizing traffic levels) ---\n// Assign traffic level: 0 (Low), 1 (Medium), 2 (High)\nif (msg.payload.traffic_volume < 1500) {\n    msg.payload.traffic_level = 0;\n} else if (msg.payload.traffic_volume < 4000) {\n    msg.payload.traffic_level = 1;\n} else {\n    msg.payload.traffic_level = 2;\n}\n\n// Pass the processed message to the next node\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -164,98 +164,6 @@
         "x": 800,
         "y": 360,
         "wires": []
-    },
-    {
-        "id": "f52d9c7732c9193e",
-        "type": "inject",
-        "z": "e7147f212e63eb38",
-        "d": true,
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "holiday\ttemp\train_1h\tsnow_1h\tclouds_all\tweather_main\tweather_description\tdate_time\ttraffic_volume None\t288.28\t0\t0\t40\tClouds\tscattered clouds\t10/2/2012 9:00\t5545 None\t289.36\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 10:00\t4516 None\t289.58\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 11:00\t4767 None\t290.13\t0\t0\t90\tClouds\tovercast clouds\t10/2/2012 12:00\t5026 None\t291.14\t0\t0\t75\tClouds\tbroken clouds\t10/2/2012 13:00\t4918 None\t291.72\t0\t0\t1\tClear\tsky is clear\t10/2/2012 14:00\t5181 None\t293.17\t0\t0\t1\tClear\tsky is clear\t10/2/2012 15:00\t5584 None\t293.86\t0\t0\t1\tClear\tsky is clear\t10/2/2012 16:00\t6015 None\t294.14\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 17:00\t5791 None\t293.1\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 18:00\t4770 None\t290.97\t0\t0\t20\tClouds\tfew clouds\t10/2/2012 19:00\t3539 None\t289.38\t0\t0\t1\tClear\tsky is clear\t10/2/2012 20:00\t2784",
-        "payloadType": "str",
-        "x": 90,
-        "y": 800,
-        "wires": [
-            [
-                "02686498c5de7f39"
-            ]
-        ]
-    },
-    {
-        "id": "02686498c5de7f39",
-        "type": "csv",
-        "z": "e7147f212e63eb38",
-        "name": "",
-        "spec": "rfc",
-        "sep": ",",
-        "hdrin": true,
-        "hdrout": "none",
-        "multi": "one",
-        "ret": "\\r\\n",
-        "temp": "",
-        "skip": "0",
-        "strings": true,
-        "include_empty_strings": "",
-        "include_null_values": "",
-        "x": 270,
-        "y": 800,
-        "wires": [
-            [
-                "75ec954d474e76da"
-            ]
-        ]
-    },
-    {
-        "id": "75ec954d474e76da",
-        "type": "function",
-        "z": "e7147f212e63eb38",
-        "name": "Data Cleaning",
-        "func": "// Handle missing values\nif (!msg.payload.temp) msg.payload.temp = 20;\nif (!msg.payload.rain_1h) msg.payload.rain_1h = 0;\n\n// Remove invalid data\nif (!msg.payload.traffic_volume) return null;\nmsg.payload.traffic_volume = Math.max(0, msg.payload.traffic_volume);\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 460,
-        "y": 800,
-        "wires": [
-            [
-                "fbb9b22efea5c26b"
-            ]
-        ]
-    },
-    {
-        "id": "fbb9b22efea5c26b",
-        "type": "function",
-        "z": "e7147f212e63eb38",
-        "name": "Feature Engineering",
-        "func": "let date = new Date(msg.payload.date_time);\n\n// Extract hour\nmsg.payload.hour = date.getHours();\n\n// Peak hour\nmsg.payload.is_peak = (msg.payload.hour >= 7 && msg.payload.hour <= 9) ||\n    (msg.payload.hour >= 16 && msg.payload.hour <= 18);\n\n// Normalize\nmsg.payload.traffic_scaled = msg.payload.traffic_volume / 10000;\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 700,
-        "y": 800,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "b44c7550e7913aa3",
