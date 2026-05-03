@@ -28,7 +28,7 @@
             }
         },
         "debug": {
-            "filter": "filterAll"
+            "filter": "filterSelected"
         },
         "git": {
             "user": {

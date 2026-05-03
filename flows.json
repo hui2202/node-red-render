@@ -336,14 +336,21 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://stunning-space-tribble-jp5g9644gr9h5jv5-5000.app.github.dev/predict",
+        "url": "http://127.0.0.1:5000/predict",
         "tls": "",
         "persist": false,
         "proxy": "",
         "insecureHTTPParser": false,
         "authType": "",
         "senderr": false,
-        "headers": [],
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
         "x": 950,
         "y": 500,
         "wires": [
