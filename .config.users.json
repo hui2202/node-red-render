@@ -38,6 +38,8 @@
             "workflow": {
                 "mode": "auto"
             }
-        }
+        },
+        "menu-menu-item-sidebar": true,
+        "menu-menu-item-palette": false
     }
 }

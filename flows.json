@@ -8,6 +8,124 @@
         "env": []
     },
     {
+        "id": "4cc644f36c84d853",
+        "type": "ui_tab",
+        "name": "Smart Transport UI",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "6a95d2981eabb03e",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#ffffff",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#c0c0c0",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#ffffff",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue-grey",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "true",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "none",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "1c15399f1cf0af22",
+        "type": "ui_group",
+        "name": "Traffic Monitor",
+        "tab": "4cc644f36c84d853",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "inject1",
         "type": "inject",
         "z": "e7147f212e63eb38",
@@ -195,7 +313,7 @@
         "type": "function",
         "z": "e7147f212e63eb38",
         "name": "Prepare API Input",
-        "func": "// extract API\nmsg.payload = {\n    \"temp\": msg.payload.temp,\n    \"rain_1h\": msg.payload.rain_1h,\n    \"hour\": msg.payload.hour,\n    \"is_peak\": msg.payload.is_peak,\n    \"day_of_week\": msg.payload.day_of_week\n};\n\nmsg.method = \"POST\";\nmsg.url = \"http://127.0.0.1:5000/predict\";\nmsg.timeout = 5000; // 设置 5 秒超时\nreturn msg;",
+        "func": "// extract API\nmsg.payload = {\n    \"temp\": msg.payload.temp,\n    \"rain_1h\": msg.payload.rain_1h,\n    \"hour\": msg.payload.hour,\n    \"is_peak\": msg.payload.is_peak,\n    \"day_of_week\": msg.payload.day_of_week\n};\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -218,7 +336,7 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "",
+        "url": "https://stunning-space-tribble-jp5g9644gr9h5jv5-5000.app.github.dev/predict",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -230,34 +348,7 @@
         "y": 500,
         "wires": [
             [
-                "84e9c50575713fac"
-            ]
-        ]
-    },
-    {
-        "id": "84e9c50575713fac",
-        "type": "change",
-        "z": "e7147f212e63eb38",
-        "name": "Set Results",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.traffic_prediction",
-                "pt": "msg",
-                "to": "payload.traffic_level",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1110,
-        "y": 500,
-        "wires": [
-            [
-                "f33bc7b5a63dddd6"
+                "418010e6418f01d6"
             ]
         ]
     },
@@ -285,7 +376,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 560,
@@ -314,15 +406,158 @@
         "type": "debug",
         "z": "e7147f212e63eb38",
         "name": "debug 3",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1260,
-        "y": 500,
+        "x": 1380,
+        "y": 660,
         "wires": []
+    },
+    {
+        "id": "418010e6418f01d6",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Set Result 2",
+        "func": "var level = msg.payload.traffic_level;\nvar labelMap = {0: \"Low\", 1: \"Medium\", 2: \"High\"};\n\nmsg.payload = {\n    traffic_level: level,\n    traffic_prediction: labelMap[level] || \"Unknown\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 500,
+        "wires": [
+            [
+                "f33bc7b5a63dddd6",
+                "e9ab1fb4e46c9991",
+                "ef33aba968250a52"
+            ]
+        ]
+    },
+    {
+        "id": "e9ab1fb4e46c9991",
+        "type": "switch",
+        "z": "e7147f212e63eb38",
+        "name": "Check Traffic Level",
+        "property": "payload.traffic_level",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 1410,
+        "y": 480,
+        "wires": [
+            [
+                "2651f58c3ebd4669"
+            ],
+            [
+                "2651f58c3ebd4669"
+            ],
+            [
+                "2651f58c3ebd4669"
+            ]
+        ]
+    },
+    {
+        "id": "2651f58c3ebd4669",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Format Alert",
+        "func": "var level = msg.payload.traffic_level;\nif (level === 2) {\n    msg.payload = \"⚠️ HIGH TRAFFIC! Deploy extra transport now.\";\n} else if (level === 1) {\n    msg.payload = \"ℹ️ Medium traffic. Monitor the situation.\";\n} else {\n    msg.payload = \"✅ Traffic is normal. No action needed.\";\n}\nmsg.trafficLevel = level; // use this instead of msg.topic\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1610,
+        "y": 480,
+        "wires": [
+            [
+                "bcfd419c9643e0b4"
+            ]
+        ]
+    },
+    {
+        "id": "e5ed2baa51b3e6ea",
+        "type": "ui_toast",
+        "z": "e7147f212e63eb38",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "red",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 2000,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "bcfd419c9643e0b4",
+        "type": "function",
+        "z": "e7147f212e63eb38",
+        "name": "Only on Change",
+        "func": "var currentLevel = msg.trafficLevel;\nvar lastLevel = context.get('lastLevel');\n\nif (currentLevel !== lastLevel) {\n    context.set('lastLevel', currentLevel);\n    return msg;\n} else {\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1800,
+        "y": 480,
+        "wires": [
+            [
+                "e5ed2baa51b3e6ea"
+            ]
+        ]
+    },
+    {
+        "id": "ef33aba968250a52",
+        "type": "ui_template",
+        "z": "e7147f212e63eb38",
+        "group": "1c15399f1cf0af22",
+        "name": "",
+        "order": 3,
+        "width": "12",
+        "height": "19",
+        "format": "<style>\n  svg {\n    overflow: hidden;\n    display: block;\n  }\n\n  .dash {\n    padding: 24px;\n    font-family: 'Segoe UI', sans-serif;\n    background: #f0f4f8;\n    margin: -16px;\n    overflow: hidden;\n    box-sizing: border-box;\n    width: 100%;\n  }\n\n  .header {\n    background: #1e3a5f;\n    border-radius: 12px;\n    padding: 20px;\n    text-align: center;\n    margin-bottom: 18px;\n  }\n\n  .notif {\n    border-radius: 10px;\n    padding: 14px 20px;\n    margin-bottom: 18px;\n    font-size: 14px;\n    font-weight: 600;\n    text-align: center;\n  }\n\n  .card {\n    background: #ffffff !important;\n    border: 1px solid #d1dce8;\n    border-radius: 12px;\n    padding: 20px;\n    margin-bottom: 16px;\n    overflow: hidden;\n    box-sizing: border-box;\n  }\n\n  .card-label {\n    color: #7a96b0;\n    font-size: 11px;\n    letter-spacing: 3px;\n    text-transform: uppercase;\n    margin-bottom: 12px;\n    text-align: center;\n  }\n\n  .status-badge {\n    display: block;\n    padding: 14px;\n    border-radius: 30px;\n    font-size: 20px;\n    font-weight: 700;\n    letter-spacing: 4px;\n    text-align: center;\n  }\n\n  .recom {\n    background: #ffffff !important;\n    border: 1px solid #d1dce8;\n    border-radius: 12px;\n    padding: 16px 20px;\n    text-align: center;\n    font-size: 14px;\n    font-weight: 500;\n    line-height: 1.6;\n    box-sizing: border-box;\n  }\n\n  .chart-wrap {\n    display: flex;\n    gap: 8px;\n    align-items: stretch;\n  }\n\n  .chart-yaxis {\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    padding-bottom: 2px;\n    padding-right: 6px;\n    min-width: 28px;\n    text-align: right;\n  }\n\n  .chart-bars {\n    flex: 1;\n    display: flex;\n    align-items: flex-end;\n    gap: 5px;\n    height: 160px;\n    border-bottom: 2px solid #d1dce8;\n    border-left: 2px solid #d1dce8;\n    padding: 8px 4px 0 4px;\n  }\n\n  .chart-bar {\n    flex: 1;\n    border-radius: 4px 4px 0 0;\n    min-width: 8px;\n  }\n</style>\n\n<div class=\"dash\">\n\n  <div class=\"header\">\n    <div style=\"margin:0; color:#e8f4fd; font-size:20px; letter-spacing:3px; font-weight:700;\">🚌 SMART TRANSPORT\n      MONITOR</div>\n    <div style=\"margin:6px 0 0; color:#90b8d4; font-size:11px; letter-spacing:2px;\">REAL-TIME ML TRAFFIC PREDICTION —\n      NODE-RED</div>\n  </div>\n\n  <!-- LOW -->\n  <div ng-if=\"msg.payload.traffic_level === 0\">\n    <div class=\"notif\" style=\"background:#e8f8f0; border:1px solid #27ae60; color:#1e8449;\">\n      ✅ Traffic is normal. No action needed.\n    </div>\n    <div class=\"card\" style=\"text-align:center;\">\n      <div class=\"card-label\" style=\"margin-bottom:20px;\">Traffic Level</div>\n      <svg width=\"100%\" height=\"175\" viewBox=\"0 0 260 160\" style=\"overflow:visible;\">\n        <path d=\"M20,110 A100,100 0 0,1 86,21\" fill=\"none\" stroke=\"#27ae60\" stroke-width=\"16\" stroke-linecap=\"round\" />\n        <path d=\"M90,20 A100,100 0 0,1 170,20\" fill=\"none\" stroke=\"#e67e22\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <path d=\"M174,21 A100,100 0 0,1 240,110\" fill=\"none\" stroke=\"#c0392b\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <line x1=\"130\" y1=\"110\" x2=\"32\" y2=\"110\" stroke=\"#1e3a5f\" stroke-width=\"3.5\" stroke-linecap=\"round\" />\n        <circle cx=\"130\" cy=\"110\" r=\"9\" fill=\"#1e3a5f\" />\n        <circle cx=\"130\" cy=\"110\" r=\"4\" fill=\"white\" />\n        <text x=\"130\" y=\"145\" text-anchor=\"middle\" fill=\"#27ae60\" font-size=\"28\" font-weight=\"bold\">0</text>\n        <text x=\"8\" y=\"128\" fill=\"#27ae60\" font-size=\"11\" font-weight=\"600\">LOW</text>\n        <text x=\"110\" y=\"1\" fill=\"#7a96b0\" font-size=\"11\">MED</text>\n        <text x=\"218\" y=\"128\" fill=\"#7a96b0\" font-size=\"11\">HIGH</text>\n      </svg>\n      <div style=\"font-size:11px;color:#7a96b0;margin-top:4px;\">0 = Low &nbsp;|&nbsp; 1 = Medium &nbsp;|&nbsp; 2 = High\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Traffic History (Last 20 Readings)</div>\n      <div class=\"chart-wrap\">\n        <div class=\"chart-yaxis\">\n          <span style=\"font-size:10px;color:#c0392b;\">High</span>\n          <span style=\"font-size:10px;color:#e67e22;\">Med</span>\n          <span style=\"font-size:10px;color:#27ae60;\">Low</span>\n        </div>\n        <div class=\"chart-bars\">\n          <div class=\"chart-bar\" ng-repeat=\"h in hist track by $index\" ng-style=\"{\n              'height': (h === 0 ? '20%' : h === 1 ? '55%' : '95%'),\n              'background': (h === 0 ? '#27ae60' : h === 1 ? '#e67e22' : '#c0392b'),\n              'opacity': ($index === hist.length-1) ? '1' : '0.6'\n            }\">\n          </div>\n        </div>\n      </div>\n      <div style=\"display:flex; justify-content:space-between; margin-top:10px; align-items:center;\">\n        <span style=\"font-size:10px;color:#7a96b0;\">← Older</span>\n        <div style=\"display:flex;gap:14px;\">\n          <span style=\"font-size:10px;color:#27ae60;\">■ Low</span>\n          <span style=\"font-size:10px;color:#e67e22;\">■ Med</span>\n          <span style=\"font-size:10px;color:#c0392b;\">■ High</span>\n        </div>\n        <span style=\"font-size:10px;color:#7a96b0;\">Latest →</span>\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Status</div>\n      <div class=\"status-badge\" style=\"background:#e8f8f0;color:#1e8449;border:2px solid #27ae60;\">LOW</div>\n    </div>\n    <div class=\"recom\" style=\"color:#1e8449;\">✅ Traffic is normal. No action needed.</div>\n  </div>\n\n  <!-- MEDIUM -->\n  <div ng-if=\"msg.payload.traffic_level === 1\">\n    <div class=\"notif\" style=\"background:#fef5e7; border:1px solid #e67e22; color:#b7600d;\">\n      ℹ️ Medium traffic. Monitor the situation.\n    </div>\n    <div class=\"card\" style=\"text-align:center;\">\n      <div class=\"card-label\" style=\"margin-bottom:20px;\">Traffic Level</div>\n      <svg width=\"100%\" height=\"175\" viewBox=\"0 0 260 160\" style=\"overflow:visible;\">\n        <path d=\"M20,110 A100,100 0 0,1 86,21\" fill=\"none\" stroke=\"#27ae60\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <path d=\"M90,20 A100,100 0 0,1 170,20\" fill=\"none\" stroke=\"#e67e22\" stroke-width=\"16\" stroke-linecap=\"round\" />\n        <path d=\"M174,21 A100,100 0 0,1 240,110\" fill=\"none\" stroke=\"#c0392b\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <line x1=\"130\" y1=\"110\" x2=\"130\" y2=\"18\" stroke=\"#1e3a5f\" stroke-width=\"3.5\" stroke-linecap=\"round\" />\n        <circle cx=\"130\" cy=\"110\" r=\"9\" fill=\"#1e3a5f\" />\n        <circle cx=\"130\" cy=\"110\" r=\"4\" fill=\"white\" />\n        <text x=\"130\" y=\"145\" text-anchor=\"middle\" fill=\"#e67e22\" font-size=\"28\" font-weight=\"bold\">1</text>\n        <text x=\"8\" y=\"128\" fill=\"#7a96b0\" font-size=\"11\">LOW</text>\n        <text x=\"110\" y=\"1\" fill=\"#e67e22\" font-size=\"11\" font-weight=\"600\">MED</text>\n        <text x=\"218\" y=\"128\" fill=\"#7a96b0\" font-size=\"11\">HIGH</text>\n      </svg>\n      <div style=\"font-size:11px;color:#7a96b0;margin-top:4px;\">0 = Low &nbsp;|&nbsp; 1 = Medium &nbsp;|&nbsp; 2 = High\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Traffic History (Last 20 Readings)</div>\n      <div class=\"chart-wrap\">\n        <div class=\"chart-yaxis\">\n          <span style=\"font-size:10px;color:#c0392b;\">High</span>\n          <span style=\"font-size:10px;color:#e67e22;\">Med</span>\n          <span style=\"font-size:10px;color:#27ae60;\">Low</span>\n        </div>\n        <div class=\"chart-bars\">\n          <div class=\"chart-bar\" ng-repeat=\"h in hist track by $index\" ng-style=\"{\n              'height': (h === 0 ? '20%' : h === 1 ? '55%' : '95%'),\n              'background': (h === 0 ? '#27ae60' : h === 1 ? '#e67e22' : '#c0392b'),\n              'opacity': ($index === hist.length-1) ? '1' : '0.6'\n            }\">\n          </div>\n        </div>\n      </div>\n      <div style=\"display:flex; justify-content:space-between; margin-top:10px; align-items:center;\">\n        <span style=\"font-size:10px;color:#7a96b0;\">← Older</span>\n        <div style=\"display:flex;gap:14px;\">\n          <span style=\"font-size:10px;color:#27ae60;\">■ Low</span>\n          <span style=\"font-size:10px;color:#e67e22;\">■ Med</span>\n          <span style=\"font-size:10px;color:#c0392b;\">■ High</span>\n        </div>\n        <span style=\"font-size:10px;color:#7a96b0;\">Latest →</span>\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Status</div>\n      <div class=\"status-badge\" style=\"background:#fef5e7;color:#b7600d;border:2px solid #e67e22;\">MEDIUM</div>\n    </div>\n    <div class=\"recom\" style=\"color:#b7600d;\">ℹ️ Medium traffic detected. Monitor the situation closely.</div>\n  </div>\n\n  <!-- HIGH -->\n  <div ng-if=\"msg.payload.traffic_level === 2\">\n    <div class=\"notif\" style=\"background:#fdecea; border:1px solid #c0392b; color:#922b21;\">\n      ⚠️ HIGH TRAFFIC ALERT! Deploy extra transport resources immediately.\n    </div>\n    <div class=\"card\" style=\"text-align:center;\">\n      <div class=\"card-label\" style=\"margin-bottom:20px;\">Traffic Level</div>\n      <svg width=\"100%\" height=\"175\" viewBox=\"0 0 260 160\" style=\"overflow:visible;\">\n        <path d=\"M20,110 A100,100 0 0,1 86,21\" fill=\"none\" stroke=\"#27ae60\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <path d=\"M90,20 A100,100 0 0,1 170,20\" fill=\"none\" stroke=\"#e67e22\" stroke-width=\"16\" stroke-linecap=\"round\"\n          opacity=\"0.3\" />\n        <path d=\"M174,21 A100,100 0 0,1 240,110\" fill=\"none\" stroke=\"#c0392b\" stroke-width=\"16\"\n          stroke-linecap=\"round\" />\n        <line x1=\"130\" y1=\"110\" x2=\"228\" y2=\"110\" stroke=\"#1e3a5f\" stroke-width=\"3.5\" stroke-linecap=\"round\" />\n        <circle cx=\"130\" cy=\"110\" r=\"9\" fill=\"#1e3a5f\" />\n        <circle cx=\"130\" cy=\"110\" r=\"4\" fill=\"white\" />\n        <text x=\"130\" y=\"145\" text-anchor=\"middle\" fill=\"#c0392b\" font-size=\"28\" font-weight=\"bold\">2</text>\n        <text x=\"8\" y=\"128\" fill=\"#7a96b0\" font-size=\"11\">LOW</text>\n        <text x=\"110\" y=\"1\" fill=\"#7a96b0\" font-size=\"11\">MED</text>\n        <text x=\"218\" y=\"128\" fill=\"#c0392b\" font-size=\"11\" font-weight=\"600\">HIGH</text>\n      </svg>\n      <div style=\"font-size:11px;color:#7a96b0;margin-top:4px;\">0 = Low &nbsp;|&nbsp; 1 = Medium &nbsp;|&nbsp; 2 = High\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Traffic History (Last 20 Readings)</div>\n      <div class=\"chart-wrap\">\n        <div class=\"chart-yaxis\">\n          <span style=\"font-size:10px;color:#c0392b;\">High</span>\n          <span style=\"font-size:10px;color:#e67e22;\">Med</span>\n          <span style=\"font-size:10px;color:#27ae60;\">Low</span>\n        </div>\n        <div class=\"chart-bars\">\n          <div class=\"chart-bar\" ng-repeat=\"h in hist track by $index\" ng-style=\"{\n              'height': (h === 0 ? '20%' : h === 1 ? '55%' : '95%'),\n              'background': (h === 0 ? '#27ae60' : h === 1 ? '#e67e22' : '#c0392b'),\n              'opacity': ($index === hist.length-1) ? '1' : '0.6'\n            }\">\n          </div>\n        </div>\n      </div>\n      <div style=\"display:flex; justify-content:space-between; margin-top:10px; align-items:center;\">\n        <span style=\"font-size:10px;color:#7a96b0;\">← Older</span>\n        <div style=\"display:flex;gap:14px;\">\n          <span style=\"font-size:10px;color:#27ae60;\">■ Low</span>\n          <span style=\"font-size:10px;color:#e67e22;\">■ Med</span>\n          <span style=\"font-size:10px;color:#c0392b;\">■ High</span>\n        </div>\n        <span style=\"font-size:10px;color:#7a96b0;\">Latest →</span>\n      </div>\n    </div>\n    <div class=\"card\">\n      <div class=\"card-label\">Status</div>\n      <div class=\"status-badge\" style=\"background:#fdecea;color:#922b21;border:2px solid #c0392b;\">HIGH</div>\n    </div>\n    <div class=\"recom\" style=\"color:#922b21;\">⚠️ HIGH TRAFFIC! Deploy extra transport resources immediately.</div>\n  </div>\n\n  <script>\n    (function(scope) {\n    // Initialize history array once on the scope\n    if (!scope.hist) {\n      scope.hist = [];\n    }\n  \n    scope.$watch('msg', function(msg) {\n      if (msg && msg.payload && msg.payload.traffic_level !== undefined) {\n        scope.hist.push(msg.payload.traffic_level);\n        if (scope.hist.length > 20) {\n          scope.hist = scope.hist.slice(-20);\n        }\n      }\n    });\n  })(scope);\n  </script>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1380,
+        "y": 400,
+        "wires": [
+            []
+        ]
     }
 ]
