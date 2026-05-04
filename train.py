@@ -16,7 +16,7 @@ y = df['traffic_level']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Train Model
-model = DecisionTreeClassifier()
+model = DecisionTreeClassifier(max_depth=15, min_samples_leaf=100, random_state=42)
 model.fit(X_train, y_train)
 
 # Evaluation - Save these results for the report
