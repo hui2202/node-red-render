@@ -24,9 +24,26 @@ y_pred = model.predict(X_test)
 acc = accuracy_score(y_test, y_pred)
 f1 = f1_score(y_test, y_pred, average='weighted')
 
+# --- ML Evaluation ---
 print(f"--- Model Results ---")
 print(f"Accuracy: {acc:.2f}")
 print(f"F1 Score: {f1:.2f}")
+
+# --- Baseline Accuracy ---
+print("\n--- Baseline Results (Most Frequent Class) ---")
+
+# Step 1: Identify the most frequent class in your training labels
+most_frequent_label = y_train.value_counts().idxmax()
+
+# Step 2: Create a list of 'guesses' that are all the most frequent label
+baseline_preds = [most_frequent_label] * len(y_test)
+
+# Step 3: Calculate metrics for the baseline
+baseline_acc = accuracy_score(y_test, baseline_preds)
+baseline_f1 = f1_score(y_test, baseline_preds, average='weighted')
+
+print(f"Baseline Accuracy: {baseline_acc:.2f}")
+print(f"Baseline F1 Score: {baseline_f1:.2f}")
 
 # Save the model
 joblib.dump(model, 'traffic_model.pkl')
